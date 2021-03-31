@@ -3,6 +3,7 @@ package com.example.blog.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "usr")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,7 +12,7 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-    private int enable = 1;
+    private int enable;
     private String role;
 
     public User() {}
