@@ -1,7 +1,6 @@
 package com.example.blog.service;
 
 import com.example.blog.model.Post;
-import com.example.blog.model.User;
 import com.example.blog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

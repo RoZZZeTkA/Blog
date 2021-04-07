@@ -14,33 +14,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.sql.DataSource;
+import java.util.Collections;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-//@CrossOrigin
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-//    @Autowired
-//    private DataSource dataSource;
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private JwtFilter jwtFilter;
-
-//    @Autowired
-//    public void configAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-//        authenticationManagerBuilder.jdbcAuthentication()
-//                .dataSource(dataSource)
-//                .passwordEncoder(new BCryptPasswordEncoder(10))
-//                .usersByUsernameQuery("select nickname, password, enable from usr where nickname = ?")
-//                .authoritiesByUsernameQuery("select nickname, role from usr where nickname = ?");
-//    }
 
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
@@ -60,11 +51,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().disable();
+        //http.cors().disable();
         http
-                .csrf().disable()
+                .csrf().disable().cors(withDefaults())
                 .authorizeRequests()
-                .antMatchers("/auth")
+                .antMatchers("/auth", "/user/add")
                 .permitAll().antMatchers(HttpMethod.OPTIONS, "/**")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling()
@@ -73,18 +64,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                    .antMatchers("/").permitAll()
-//                    .anyRequest().authenticated()
-//                .and()
-//                    .formLogin()
-//                    //.loginPage("/login").permitAll()
-//                .and()
-//                    .logout().permitAll();
-//
-////        http.authorizeRequests().antMatchers("/**").permitAll();
-//    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Collections.singletonList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
