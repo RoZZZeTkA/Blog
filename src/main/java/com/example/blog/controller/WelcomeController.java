@@ -31,7 +31,7 @@ public class WelcomeController {
                     new UsernamePasswordAuthenticationToken(authRequest.getNickname(), authRequest.getPassword())
             );
         }catch (Exception ex){
-            throw new Exception("Invalid nickname ar password");
+            throw new Exception("Invalid nickname or password");
         }
         return jwtUtil.generateToken(authRequest.getNickname());
     }
