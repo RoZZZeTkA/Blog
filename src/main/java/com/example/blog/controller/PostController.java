@@ -3,6 +3,7 @@ package com.example.blog.controller;
 import com.example.blog.model.Post;
 import com.example.blog.model.User;
 import com.example.blog.service.PostService;
+import com.example.blog.service.StorageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,12 @@ public class PostController {
     public ResponseEntity<Post> getPostById(@PathVariable("id") Long id) {
         Post post = postService.findPostById(id);
         return new ResponseEntity<>(post, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable("id") Long id) {
+        List<Post> posts = postService.findPostsByUserId(id);
+        return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
     @PostMapping("/add")

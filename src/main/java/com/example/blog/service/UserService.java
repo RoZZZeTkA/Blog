@@ -21,7 +21,6 @@ public class UserService {
 
     public User addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRole("ROLE_USER");
         return userRepository.save(user);
     }
 
@@ -31,6 +30,10 @@ public class UserService {
 
     public User findUserById(Long id) {
         return userRepository.findUserById(id);
+    }
+
+    public User findUserByNickname(String nickname){
+        return userRepository.findByNickname(nickname);
     }
 
     public User updateUser(User user) {

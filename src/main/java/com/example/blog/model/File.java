@@ -18,4 +18,8 @@ public class File {
         this.postId = postId;
         this.url = url;
     }
+
+    public String getUrl() {
+        return url;
+    }
 }
