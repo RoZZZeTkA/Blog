@@ -1,12 +1,16 @@
 package com.example.blog.service;
 
 import com.example.blog.model.Post;
+import com.example.blog.model.Tag;
 import com.example.blog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PostService {
@@ -17,16 +21,34 @@ public class PostService {
     public UserService userService;
 
     @Autowired
+    public TagService tagService;
+
+    @Autowired
     public PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
 
     public List<Post> findAllPosts() { return postRepository.findAll(); }
 
-    public Post findPostById(Long id) { return postRepository.findPostById(id); }
+    //public Post findPostById(Long id) { return postRepository.findPostById(id); }
 
-    public Post addPost(Post post){
+    public Post findPostById(Long id) {
+        Post post = postRepository.findPostById(id);
+        System.out.println(post);
+        return post;
+    }
+
+    public Post addPost(Post post, String tags){
         post.setUserId(userService.findUserByNickname(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
+        Set<Tag> tagSet = new HashSet<>();
+        String[] tagArray = tags.split(", ");
+        for(String tag: tagArray){
+            tagSet.add(tagService.addTag(tag));
+        }
+
+//        tagSet.add(tagService.addTag("qqq"));
+//        tagSet.add(tagService.addTag("www"));
+        post.setPostTags(tagSet);
         return postRepository.save(post);
     }
 
@@ -38,8 +60,9 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    public Post findPostByUserIdAndTitle(Long userId, String title) {
-        return postRepository.findPostByUserIdAndTitle(userId, title);
+    public Post findPostByCurrentUserAndTitle(String title) {
+        return postRepository.findPostByUserIdAndTitle(userService.findUserByNickname(
+                SecurityContextHolder.getContext().getAuthentication().getName()).getId(), title);
     }
 
     public List<Post> findPostsByUserId(Long userId){

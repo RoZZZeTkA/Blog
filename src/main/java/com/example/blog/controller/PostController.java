@@ -39,17 +39,17 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Post> addPost(@RequestBody Post post){
-        Post newPost = postService.addPost(post);
+    @PostMapping("/add/{tags}")
+    public ResponseEntity<Post> addPost(@RequestBody Post post, @PathVariable("tags") String tags){
+        Post newPost = postService.addPost(post, tags);
         return new ResponseEntity<>(newPost, HttpStatus.OK);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Post> updatePost(@RequestBody Post post){
-        Post updatePost = postService.addPost(post);
-        return new ResponseEntity<>(updatePost, HttpStatus.OK);
-    }
+//    @PutMapping("/update")
+//    public ResponseEntity<Post> updatePost(@RequestBody Post post){
+//        Post updatePost = postService.addPost(post);
+//        return new ResponseEntity<>(updatePost, HttpStatus.OK);
+//    }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePost(@PathVariable("id") Long id){

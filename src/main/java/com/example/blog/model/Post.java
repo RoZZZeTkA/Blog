@@ -1,6 +1,7 @@
 package com.example.blog.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Post {
@@ -11,6 +12,13 @@ public class Post {
     private Long userId;
     private String title;
     private String value;
+
+    @ManyToMany
+    @JoinTable(
+        name = "post_tag",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    Set<Tag> postTags;
 
     public Post() {}
 
@@ -46,5 +54,24 @@ public class Post {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Set<Tag> getPostTags() {
+        return postTags;
+    }
+
+    public void setPostTags(Set<Tag> postTags) {
+        this.postTags = postTags;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", title='" + title + '\'' +
+                ", value='" + value + '\'' +
+                ", postTags=" + postTags +
+                '}';
     }
 }

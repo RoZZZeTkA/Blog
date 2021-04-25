@@ -1,5 +1,6 @@
 package com.example.blog.service;
 
+import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class UserService {
 
     public User addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 

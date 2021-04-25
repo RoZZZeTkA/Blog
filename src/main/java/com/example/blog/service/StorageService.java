@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,11 +45,7 @@ public class StorageService {
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         fileObj.delete();
         fileRepository.save(new com.example.blog.model.File(
-                postService.findPostByUserIdAndTitle(
-                        userService.findUserByNickname(
-                                SecurityContextHolder.getContext().getAuthentication().getName())
-                                .getId(), title)
-                                .getId(), url  + fileName));
+                postService.findPostByCurrentUserAndTitle(title).getId(), url  + fileName));
         return "File uploaded : " + fileName;
     }
 
