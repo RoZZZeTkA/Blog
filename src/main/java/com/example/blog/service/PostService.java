@@ -30,12 +30,16 @@ public class PostService {
 
     public List<Post> findAllPosts() { return postRepository.findAll(); }
 
-    //public Post findPostById(Long id) { return postRepository.findPostById(id); }
+    public Post findPostById(Long id) { return postRepository.findPostById(id); }
 
-    public Post findPostById(Long id) {
-        Post post = postRepository.findPostById(id);
-        System.out.println(post);
-        return post;
+    public Set<Post> findPostsByTags(String tags){
+        String[] tagArray = tags.split(",");
+        Set<Post> posts = new HashSet<>();
+        posts.addAll(tagService.findTagByValue(tagArray[0]).getTagPosts());
+        for(int i = 1; i < tagArray.length; i++){
+            posts.retainAll(tagService.findTagByValue(tagArray[i]).getTagPosts());
+        }
+        return posts;
     }
 
     public Post addPost(Post post, String tags){
@@ -45,9 +49,6 @@ public class PostService {
         for(String tag: tagArray){
             tagSet.add(tagService.addTag(tag));
         }
-
-//        tagSet.add(tagService.addTag("qqq"));
-//        tagSet.add(tagService.addTag("www"));
         post.setPostTags(tagSet);
         return postRepository.save(post);
     }

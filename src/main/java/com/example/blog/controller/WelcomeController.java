@@ -12,10 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -29,8 +26,8 @@ public class WelcomeController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String welcome(Authentication authentication){
-        return "Hello " + authentication;
+    public String welcome(Authentication authentication, @RequestParam("q") String q, @RequestParam("a") String a){
+        return "Hello " + q + " " + a + "\n" + authentication;
     }
 
     @GetMapping("/userPanel")

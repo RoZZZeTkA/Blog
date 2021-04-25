@@ -1,5 +1,7 @@
 package com.example.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -34,6 +36,11 @@ public class Tag {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @JsonIgnore
+    public Set<Post> getTagPosts() {
+        return tagPosts;
     }
 
     @Override

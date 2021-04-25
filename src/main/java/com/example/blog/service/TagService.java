@@ -1,8 +1,6 @@
 package com.example.blog.service;
 
-//import com.example.blog.model.PostTag;
 import com.example.blog.model.Tag;
-//import com.example.blog.repository.PostTagRepository;
 import com.example.blog.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +11,9 @@ public class TagService {
     @Autowired
     public TagRepository tagRepository;
 
-    @Autowired
-    public PostService postService;
+    public Tag findTagByValue(String value){
+        return tagRepository.findTagByValue(value);
+    }
 
     public Tag addTag(String value) {
         Tag tag = tagRepository.findTagByValue(value);
