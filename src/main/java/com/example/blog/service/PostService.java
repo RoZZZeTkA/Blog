@@ -39,6 +39,7 @@ public class PostService {
         for(int i = 1; i < tagArray.length; i++){
             posts.retainAll(tagService.findTagByValue(tagArray[i]).getTagPosts());
         }
+        System.out.println(posts);
         return posts;
     }
 

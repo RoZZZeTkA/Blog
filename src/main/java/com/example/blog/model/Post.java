@@ -1,8 +1,7 @@
 package com.example.blog.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -13,6 +12,8 @@ public class Post {
     private Long id;
     private Long userId;
     private String title;
+
+    @Column(length = 32767)
     private String value;
 
     @ManyToMany
@@ -20,7 +21,10 @@ public class Post {
         name = "post_tag",
         joinColumns = @JoinColumn(name = "post_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    Set<Tag> postTags;
+    private Set<Tag> postTags;
+
+//    @OneToMany(mappedBy = "post")
+//    private List<Mark> postMarks;
 
     public Post() {}
 
