@@ -1,6 +1,7 @@
 package com.example.blog.model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -11,6 +12,7 @@ public class Post {
     @Column(nullable = false, updatable = false)
     private Long id;
     private Long userId;
+    private Date date;
     private String title;
 
     @Column(length = 32767)
@@ -23,8 +25,8 @@ public class Post {
         inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> postTags;
 
-//    @OneToMany(mappedBy = "post")
-//    private List<Mark> postMarks;
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<Mark> postMarks;
 
     public Post() {}
 
@@ -70,14 +72,32 @@ public class Post {
         this.postTags = postTags;
     }
 
+    public List<Mark> getPostMarks() {
+        return postMarks;
+    }
+
+    public void setPostMarks(List<Mark> postMarks) {
+        this.postMarks = postMarks;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
                 "id=" + id +
                 ", userId=" + userId +
+                ", date=" + date +
                 ", title='" + title + '\'' +
                 ", value='" + value + '\'' +
                 ", postTags=" + postTags +
+                ", postMarks=" + postMarks +
                 '}';
     }
 }

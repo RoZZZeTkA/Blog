@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -30,7 +27,13 @@ public class PostService {
 
     public List<Post> findAllPosts() { return postRepository.findAll(); }
 
-    public Post findPostById(Long id) { return postRepository.findPostById(id); }
+//    public Post findPostById(Long id) { return postRepository.findPostById(id); }
+
+    public Post findPostById(Long id) {
+        Post post = postRepository.findPostById(id);
+        //System.out.println(post);
+        return post;
+    }
 
     public Set<Post> findPostsByTags(String tags){
         String[] tagArray = tags.split(",");
@@ -39,7 +42,7 @@ public class PostService {
         for(int i = 1; i < tagArray.length; i++){
             posts.retainAll(tagService.findTagByValue(tagArray[i]).getTagPosts());
         }
-        System.out.println(posts);
+        //System.out.println(posts);
         return posts;
     }
 
@@ -51,6 +54,7 @@ public class PostService {
             tagSet.add(tagService.addTag(tag));
         }
         post.setPostTags(tagSet);
+        post.setDate(new Date());
         return postRepository.save(post);
     }
 
