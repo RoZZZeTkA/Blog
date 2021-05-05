@@ -11,13 +11,13 @@ public class Mark {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(insertable = false, updatable = false)
+    @Column(/*insertable*/ nullable = false, updatable = false)
     private Long postId;
     private Long userId;
     private int value;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postId", insertable = false, updatable = false)
     private Post post;
 
     public Mark(){}

@@ -27,13 +27,13 @@ public class PostService {
 
     public List<Post> findAllPosts() { return postRepository.findAll(); }
 
-//    public Post findPostById(Long id) { return postRepository.findPostById(id); }
+    public Post findPostById(Long id) { return postRepository.findPostById(id); }
 
-    public Post findPostById(Long id) {
-        Post post = postRepository.findPostById(id);
-        //System.out.println(post);
-        return post;
-    }
+//    public Post findPostById(Long id) {
+//        Post post = postRepository.findPostById(id);
+//        //System.out.println(post);
+//        return post;
+//    }
 
     public Set<Post> findPostsByTags(String tags){
         String[] tagArray = tags.split(",");

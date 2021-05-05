@@ -16,6 +16,19 @@ public class MarkService {
     public UserService userService;
 
     public Mark addMark(Long postId, int value) {
-        return markRepository.save(new Mark(postId, userService.findUserByNickname(SecurityContextHolder.getContext().getAuthentication().getName()).getId(), value));
+        Long userId = userService.findUserByNickname(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
+        Mark mark = markRepository.findMarkByPostIdAndUserId(postId, userId);
+        if(mark == null)
+            return markRepository.save(new Mark(postId, userId, value));
+        else {
+            if (mark.getValue() == value){
+                markRepository.deleteById(mark.getId());
+                return mark;
+            }
+            else {
+                mark.setValue(value);
+                return markRepository.save(mark);
+            }
+        }
     }
 }
