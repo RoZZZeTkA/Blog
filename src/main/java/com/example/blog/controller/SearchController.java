@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -20,7 +21,8 @@ public class SearchController {
     private PostService postService;
 
     @GetMapping
-    public ResponseEntity<Set<Post>> getSearchResults(@RequestParam("t") String tags){
-        return new ResponseEntity<>(postService.findPostsByTags(tags), HttpStatus.OK);
+    public ResponseEntity<List<Post>> getSearchResults(@RequestParam("t") String tags){
+        return new ResponseEntity<>(postService.findPostByQuery(tags), HttpStatus.OK);
+//        return new ResponseEntity<>(postService.findPostsByTags(tags), HttpStatus.OK);
     }
 }

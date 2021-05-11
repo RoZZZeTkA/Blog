@@ -31,4 +31,8 @@ public class MarkService {
             }
         }
     }
+
+    public void deleteMarksByPostId(Long postId){
+        markRepository.deleteMarksByPostId(postId);
+    }
 }

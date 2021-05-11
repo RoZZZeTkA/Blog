@@ -41,16 +41,24 @@ public class StorageService {
 
     public String uploadFile(MultipartFile file, String title) {
         File fileObj = convertMultiPartFileToFile(file);
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+        String originalFilename = file.getOriginalFilename();
+        String substring = originalFilename.substring(originalFilename.length() - 4);
+        if(substring.equals(".png") || substring.equals(".jpg") ||
+           originalFilename.substring(originalFilename.length() - 5).equals(".jpeg")) {
+            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+            fileObj.delete();
+            fileRepository.save(new com.example.blog.model.File(
+                    postService.findPostByCurrentUserAndTitle(title).getId(), url + fileName));
+            return "File uploaded : " + fileName;
+        }
         fileObj.delete();
-        fileRepository.save(new com.example.blog.model.File(
-                postService.findPostByCurrentUserAndTitle(title).getId(), url  + fileName));
-        return "File uploaded : " + fileName;
+        return "Error: file is not an image";
     }
 
     public String deleteFile(String fileName) {
         s3Client.deleteObject(bucketName, fileName);
+        System.out.println(fileName + " removed");
         return fileName + " removed";
     }
 

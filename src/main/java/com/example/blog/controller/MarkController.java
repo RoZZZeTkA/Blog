@@ -16,7 +16,6 @@ public class MarkController {
 
     @PostMapping("/add")
     public ResponseEntity<Mark> addMark(@RequestParam(value = "postId")Long postId, @RequestParam(value = "value")int value){
-        System.out.println("postId: " + postId + " value: " + value);
         return new ResponseEntity<>(markService.addMark(postId, value), HttpStatus.OK);
     }
 }

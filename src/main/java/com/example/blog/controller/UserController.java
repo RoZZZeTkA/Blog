@@ -4,6 +4,7 @@ import com.example.blog.model.User;
 import com.example.blog.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,11 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         User user = userService.findUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser() {
+        return new ResponseEntity<>(userService.findUserByNickname(SecurityContextHolder.getContext().getAuthentication().getName()), HttpStatus.OK);
     }
 
     @PostMapping("/add")

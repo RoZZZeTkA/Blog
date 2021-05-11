@@ -11,7 +11,7 @@ public class Mark {
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(/*insertable*/ nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Long postId;
     private Long userId;
     private int value;

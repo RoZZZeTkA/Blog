@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MarkRepository extends JpaRepository<Mark, Long> {
     Mark findMarkByPostIdAndUserId(Long postId, Long userId);
+    void deleteMarksByPostId(Long postId);
 }
