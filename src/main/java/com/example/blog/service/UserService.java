@@ -8,12 +8,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
 
     public UserRepository userRepository;
     public BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -23,6 +27,10 @@ public class UserService {
     public User addUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
+        String activationCode = UUID.randomUUID().toString();
+        user.setActivationCode(activationCode);
+        emailService.sendMessage(user.getEmail(), "Activation", "Follow the link to activate your profile\n" +
+                                                                            "http://localhost:4200/activation/" + activationCode);
         return userRepository.save(user);
     }
 
@@ -44,5 +52,11 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void activateUser(String activationCode) {
+        User user = userRepository.findUserByActivationCode(activationCode);
+        user.setActivationCode(null);
+        userRepository.save(user);
     }
 }

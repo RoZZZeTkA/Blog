@@ -36,6 +36,11 @@ public class UserController {
         return new ResponseEntity<>(userService.findUserByNickname(SecurityContextHolder.getContext().getAuthentication().getName()), HttpStatus.OK);
     }
 
+    @GetMapping("/activation/{activationCode}")
+    public void activateUser(@PathVariable("activationCode") String activationCode) {
+        userService.activateUser(activationCode);
+    }
+
     @PostMapping("/add")
     public ResponseEntity<User> addUser(@RequestBody User user){
         User newUser = userService.addUser(user);

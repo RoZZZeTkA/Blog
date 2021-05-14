@@ -15,7 +15,7 @@ public class User {
     private String nickname;
     private String email;
     private String password;
-    private int enable;
+    private String activationCode;
 
     @Enumerated(EnumType.STRING)
     private Role role;

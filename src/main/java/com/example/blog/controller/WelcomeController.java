@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,6 +50,9 @@ public class WelcomeController {
             );
         }catch (Exception ex){
             throw new Exception("Invalid nickname or password");
+        }
+        if (userService.findUserByNickname(user.getNickname()).getActivationCode() != null){
+            throw new Exception("Non-activated profile");
         }
         return jwtUtil.generateToken(user.getNickname(), userService.findUserByNickname(user.getNickname()).getRole().name());
     }
