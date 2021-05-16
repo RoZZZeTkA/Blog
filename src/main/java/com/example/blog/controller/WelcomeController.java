@@ -30,7 +30,7 @@ public class WelcomeController {
     @GetMapping("/")
     public String welcome(Authentication authentication, HttpServletRequest request){
 //        return "Hello " + authentication + "\n";
-        return request.getServerName() + "\n" + request.getServerPort();
+        return "protocol: " + request.getProtocol() + "\nserver name: " + request.getServerName() + "\nserver port: " + request.getServerPort();
     }
 
     @GetMapping("/userPanel")
