@@ -1,5 +1,6 @@
 package com.example.blog.service;
 
+import com.example.blog.model.RegistrationRequest;
 import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.repository.UserRepository;
@@ -13,25 +14,44 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    public UserRepository userRepository;
     public BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     EmailService emailService;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    UserRepository userRepository;
+//    @Autowired
+//    public UserService(UserRepository userRepository) {
+//        this.userRepository = userRepository;
+//    }
 
-    public User addUser(User user) throws Exception {
-        if(userRepository.findByNickname(user.getNickname()) == null && userRepository.findUserByEmail(user.getEmail()) == null) {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//    public User addUser(User user) throws Exception {
+//        if(userRepository.findByNickname(user.getNickname()) == null && userRepository.findUserByEmail(user.getEmail()) == null) {
+//            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+//            user.setRole(Role.USER);
+//            String activationCode = UUID.randomUUID().toString();
+//            user.setActivationCode(activationCode);
+//            emailService.sendMessage(user.getEmail(), "Activation", "Follow the link to activate your profile\n" +
+//                    "http://localhost:4200/activation/" + activationCode);
+//            return userRepository.save(user);
+//        } else {
+//            throw new Exception("User with the same nickname or email already exists");
+//        }
+//    }
+
+    public User addUser(RegistrationRequest request) throws Exception {
+        System.out.println(request.getPath());
+        if(userRepository.findByNickname(request.getNickname()) == null && userRepository.findUserByEmail(request.getEmail()) == null) {
+            User user = new User();
+            user.setNickname(request.getNickname());
+            user.setEmail(request.getEmail());
+            user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
             user.setRole(Role.USER);
             String activationCode = UUID.randomUUID().toString();
             user.setActivationCode(activationCode);
             emailService.sendMessage(user.getEmail(), "Activation", "Follow the link to activate your profile\n" +
-                    "http://localhost:4200/activation/" + activationCode);
+                    request.getPath() + "/activation/" + activationCode);
             return userRepository.save(user);
         } else {
             throw new Exception("User with the same nickname or email already exists");

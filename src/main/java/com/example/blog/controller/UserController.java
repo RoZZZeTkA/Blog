@@ -1,5 +1,6 @@
 package com.example.blog.controller;
 
+import com.example.blog.model.RegistrationRequest;
 import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.service.UserService;
@@ -49,8 +50,17 @@ public class UserController {
         return new ResponseEntity<>(userService.promoteToAdmin(id), HttpStatus.OK);
     }
 
+//    @PostMapping("/add")
+//    public ResponseEntity<User> addUser(@RequestBody User user) {
+//        try {
+//            return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+//        }
+//    }
+
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<User> addUser(@RequestBody RegistrationRequest user) {
         try {
             return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
         } catch (Exception e) {
