@@ -1,8 +1,11 @@
 package com.example.blog.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
+@Data
 @Table(name = "file")
 public class File {
     @Id
@@ -17,9 +20,5 @@ public class File {
     public File(Long postId, String url){
         this.postId = postId;
         this.url = url;
-    }
-
-    public String getUrl() {
-        return url;
     }
 }

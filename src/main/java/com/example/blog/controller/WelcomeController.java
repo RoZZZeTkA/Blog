@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -27,8 +28,9 @@ public class WelcomeController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String welcome(Authentication authentication, @RequestParam("q") String q, @RequestParam("a") String a){
-        return "Hello " + q + " " + a + "\n" + authentication;
+    public String welcome(Authentication authentication, HttpServletRequest request){
+//        return "Hello " + authentication + "\n";
+        return request.getServerName() + "\n" + request.getServerPort();
     }
 
     @GetMapping("/userPanel")

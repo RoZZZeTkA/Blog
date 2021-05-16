@@ -24,14 +24,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User addUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
-        String activationCode = UUID.randomUUID().toString();
-        user.setActivationCode(activationCode);
-        emailService.sendMessage(user.getEmail(), "Activation", "Follow the link to activate your profile\n" +
-                                                                            "http://localhost:4200/activation/" + activationCode);
-        return userRepository.save(user);
+    public User addUser(User user) throws Exception {
+        if(userRepository.findByNickname(user.getNickname()) == null && userRepository.findUserByEmail(user.getEmail()) == null) {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            user.setRole(Role.USER);
+            String activationCode = UUID.randomUUID().toString();
+            user.setActivationCode(activationCode);
+            emailService.sendMessage(user.getEmail(), "Activation", "Follow the link to activate your profile\n" +
+                    "http://localhost:4200/activation/" + activationCode);
+            return userRepository.save(user);
+        } else {
+            throw new Exception("User with the same nickname or email already exists");
+        }
     }
 
     public List<User> findAllUsers() {
@@ -58,5 +62,12 @@ public class UserService {
         User user = userRepository.findUserByActivationCode(activationCode);
         user.setActivationCode(null);
         userRepository.save(user);
+    }
+
+    public User promoteToAdmin(Long id) {
+        User user = findUserById(id);
+        user.setRole(Role.ADMIN);
+        updateUser(user);
+        return user;
     }
 }

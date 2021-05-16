@@ -1,9 +1,11 @@
 package com.example.blog.controller;
 
+import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,17 +43,26 @@ public class UserController {
         userService.activateUser(activationCode);
     }
 
+    @GetMapping("/promote/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<User> promoteToAdmin(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.promoteToAdmin(id), HttpStatus.OK);
+    }
+
     @PostMapping("/add")
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        User newUser = userService.addUser(user);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        try {
+            return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
     }
 
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody User user){
-        User updateUser = userService.updateUser(user);
-        return new ResponseEntity<>(updateUser, HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
     }
+
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){

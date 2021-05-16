@@ -21,14 +21,10 @@ public class MarkService {
         if(mark == null)
             return markRepository.save(new Mark(postId, userId, value));
         else {
-            if (mark.getValue() == value){
+            if (mark.getValue() != value){
                 markRepository.deleteById(mark.getId());
-                return mark;
             }
-            else {
-                mark.setValue(value);
-                return markRepository.save(mark);
-            }
+            return mark;
         }
     }
 
