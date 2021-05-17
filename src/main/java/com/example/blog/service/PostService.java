@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
 
+    @Autowired
     public PostRepository postRepository;
 
     @Autowired
@@ -29,20 +31,17 @@ public class PostService {
     @Autowired
     public MarkService markService;
 
-    @Autowired
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public List<Post> findAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        posts.sort(Comparator.comparing(Post::getId).reversed());
+        return posts;
     }
 
-    public List<Post> findAllPosts() { return postRepository.findAll(); }
-
-    public Post findPostById(Long id) { return postRepository.findPostById(id); }
-
-//    public Post findPostById(Long id) {
-//        Post post = postRepository.findPostById(id);
-//        //System.out.println(post);
-//        return post;
-//    }
+    public Post findPostById(Long id) {
+        Post post = postRepository.findPostById(id);
+        post.setPostTags(post.getPostTags().stream().sorted(Comparator.comparing(Tag::getId)).collect(Collectors.toCollection(LinkedHashSet::new)));
+        return post;
+    }
 
     public Set<Post> findPostsByTags(String tags) {
         String[] tagArray = tags.split("[,.;\\s]+");
@@ -55,14 +54,15 @@ public class PostService {
             if(tag != null)
                 posts.retainAll(tag.getTagPosts());
         }
-        return posts;
+        return posts.stream().sorted(Comparator.comparing(Post::getId).reversed()).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public List<Post> findPostByQuery(String query) {
         List<Post> posts = new ArrayList<>(postRepository.findPostsByTitleLike("%" + query + "%"));
-        posts.addAll(findPostsByTags(query));
-//        System.out.println(posts);
-//        System.out.println("__________________________________________");
+        posts.sort(Comparator.comparing(Post::getId).reversed());
+        Set<Post> postSet = findPostsByTags(query);
+        postSet.removeAll(posts);
+        posts.addAll(postSet);
         return posts;
     }
 
@@ -71,7 +71,7 @@ public class PostService {
         if(postRepository.findPostByUserIdAndTitle(userId, post.getTitle()) == null) {
             post.setUserId(userId);
             Set<Tag> tagSet = new HashSet<>();
-            String[] tagArray = tags.split(", ");
+            String[] tagArray = tags.split("[,.;\\s]+");
             for (String tag : tagArray) {
                 tagSet.add(tagService.addTag(tag));
             }
@@ -103,6 +103,8 @@ public class PostService {
     }
 
     public List<Post> findPostsByUserId(Long userId){
-        return postRepository.findPostsByUserId(userId);
+        List<Post> posts = postRepository.findPostsByUserId(userId);
+        posts.sort(Comparator.comparing(Post::getId).reversed());
+        return posts;
     }
 }
