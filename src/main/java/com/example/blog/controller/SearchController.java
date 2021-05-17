@@ -23,6 +23,5 @@ public class SearchController {
     @GetMapping
     public ResponseEntity<List<Post>> getSearchResults(@RequestParam("t") String tags){
         return new ResponseEntity<>(postService.findPostByQuery(tags), HttpStatus.OK);
-//        return new ResponseEntity<>(postService.findPostsByTags(tags), HttpStatus.OK);
     }
 }

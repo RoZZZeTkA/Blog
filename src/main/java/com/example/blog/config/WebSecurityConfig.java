@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/auth", "/user/add", "/user/find/{id}",
                         "/post", "/post/find/{id}", "/post/user/{id}", "/file/post/{id}", "/search",
-                        "/email", "/user/activation/{activationCode}").permitAll()
+                        "/email", "/user/activation/{activationCode}", "/user/reset/email", "/user/reset/password").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
                 .and().sessionManagement()
