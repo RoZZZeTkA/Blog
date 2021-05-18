@@ -1,7 +1,6 @@
 package com.example.blog.controller;
 
 import com.example.blog.model.RegistrationRequest;
-import com.example.blog.model.Role;
 import com.example.blog.model.User;
 import com.example.blog.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -44,20 +43,23 @@ public class UserController {
         userService.activateUser(activationCode);
     }
 
+    @PostMapping("/reset/email")
+    public ResponseEntity<?> sendResetEmail(@RequestParam("email") String email, @RequestParam("path") String path) {
+        userService.sendResetEmail(email, path);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/reset/password")
+    public ResponseEntity<?> resetPassword(@RequestParam("resetCode") String resetCode, @RequestParam("newPassword") String newPassword) {
+        userService.resetPassword(resetCode, newPassword);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/promote/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<User> promoteToAdmin(@PathVariable("id") Long id) {
         return new ResponseEntity<>(userService.promoteToAdmin(id), HttpStatus.OK);
     }
-
-//    @PostMapping("/add")
-//    public ResponseEntity<User> addUser(@RequestBody User user) {
-//        try {
-//            return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-//        }
-//    }
 
     @PostMapping("/add")
     public ResponseEntity<User> addUser(@RequestBody RegistrationRequest user) {

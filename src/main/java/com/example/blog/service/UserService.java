@@ -90,4 +90,23 @@ public class UserService {
         updateUser(user);
         return user;
     }
+
+    public void sendResetEmail(String email, String path) {
+        User user = userRepository.findUserByEmail(email);
+        if (user != null){
+            user.setResetCode(UUID.randomUUID().toString());
+            userRepository.save(user);
+            emailService.sendMessage(email, "Password reset", "Follow the link to reset your password\n" +
+                    path + "/reset/code/" + user.getResetCode());
+        }
+    }
+
+    public void resetPassword(String resetCode, String newPassword){
+        User user = userRepository.findUserByResetCode(resetCode);
+        if(user != null){
+            user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            user.setResetCode(null);
+            userRepository.save(user);
+        }
+    }
 }
